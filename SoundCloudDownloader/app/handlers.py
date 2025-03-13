@@ -6,20 +6,30 @@ from aiogram.fsm.context import FSMContext
 from functions.SoundCloud import SoundCloud
 from aiogram.methods.send_audio import SendAudio
 from aiogram.utils.chat_action import ChatActionSender
-from config import TOKEN, ADMIN_ID
 from app.db_handlers import register_user, is_user_registered, get_all_users
 from functions.functions import is_user_subscribed
 from app.keyboards import sub_button
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TOKEN = os.getenv("TOKEN")
+CHANNEL_ID = os.getenv("CHANNEL_ID")
+ADMIN_ID = os.getenv("ADMIN_ID")
 
 bot = Bot(token=TOKEN)
 
 sc = SoundCloud()
-
-# class St(StatesGroup):
-#     url = State()
-
-
 rt = Router()
+
+class St(StatesGroup):
+    url = State()
+
+
+
+
+
 
 @rt.message(CommandStart())
 async def start(message: Message):
@@ -30,20 +40,19 @@ async def start(message: Message):
     else:
         await message.answer("👋 Ты уже зарегистрирован в системе.")
 
-# @rt.message(F.text == 'Download Soundloud')
-# async def get_url(message: Message, state: FSMContext):
-#     await message.answer("Send me SoundCloud url:")
-    # await state.set_state(St.url)
+@rt.message(F.text == 'Download Soundloud')
+async def get_url(message: Message, state: FSMContext):
+    await message.answer("Пришли ссылку на трек:")
+    await state.set_state(St.url)
 
 @rt.message(Command("broadcast"))
 async def broadcast_message(message: Message):
     user_id = message.from_user.id
 
     if user_id != ADMIN_ID:
-        await message.answer("❌ Только администратор может использовать рассылку.")
-        return
+        return None
 
-    # Проверяем, есть ли текст или фото в сообщении
+    #Проверяем, есть ли текст или фото в сообщении
     if message.photo:
         file_id = message.photo[-1].file_id
         text = message.caption[11:]
@@ -70,22 +79,32 @@ async def broadcast_message(message: Message):
 
     await message.answer("✅ Сообщение было успешно отправлено всем пользователям.")
 
-# @rt.message(St.url) 
+@rt.message(St.url) 
 @rt.message()
 async def send_audio(message: Message):
-    if not await is_user_subscribed(message.from_user.id, bot):
-        await message.answer("❌ Для использования бота необходимо подписаться на канал.", reply_markup=sub_button)
-    else:
-         if sc.validate_url(message.text):
+    if CHANNEL_ID:
+        if not await is_user_subscribed(message.from_user.id, bot):
+            await message.answer("❌ Для использования бота необходимо подписаться на канал.", reply_markup=sub_button)
+        else:
+            if sc.validate_url(message.text):
+                    async with ChatActionSender.upload_voice(chat_id=message.chat.id, bot=bot):
+                        await message.answer("Скачивание...") 
+                        file = sc.dowlnload(message.text)
+                        audio = FSInputFile(path=f"D:\My_projects\SoundCloudDownloader/{file['rename']}")
+                        thumnail = URLInputFile(url=f"{file['thumbnail']}", filename='thumnail.jpg')
+                        await bot.send_audio(message.chat.id, audio=audio, thumbnail=thumnail, performer=f"{file['uploader']}")
+                        sc.delete_file(f"{file['rename']}")
+            else:
+                await message.answer("Неверная ссылка")
+    else: 
+        if sc.validate_url(message.text):
                 async with ChatActionSender.upload_voice(chat_id=message.chat.id, bot=bot):
-                    await message.answer("Downloading... Please wait!") 
+                    await message.answer("Скачивание...") 
                     file = sc.dowlnload(message.text)
-                    audio = FSInputFile(path=f"D:\My_projects\SoundCloudDownloader/{file['rename']}")
+                    audio = FSInputFile(path=f"downloads/{file['rename']}")
                     thumnail = URLInputFile(url=f"{file['thumbnail']}", filename='thumnail.jpg')
                     await bot.send_audio(message.chat.id, audio=audio, thumbnail=thumnail, performer=f"{file['uploader']}")
                     sc.delete_file(f"{file['rename']}")
-         else:
-            await message.answer("Неверная ссылка")
 
 @rt.callback_query(F.data == "check")
 async def check(callback: CallbackQuery):
@@ -94,6 +113,6 @@ async def check(callback: CallbackQuery):
     else:
         await callback.message.delete()
         await callback.answer("✅Вы подписались")
-        await callback.bot.send_message(callback.message.from_user.id, 'Пртвшлите ссылку')
+        await callback.bot.send_message(callback.message.from_user.id, 'Пришлите ссылку')
     
 

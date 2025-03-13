@@ -1,4 +1,8 @@
-from config import CHANNEL_ID
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+CHANNEL_ID = os.getenv("CHANNEL_ID")
 
 async def is_user_subscribed(user_id, bot):
     try:

@@ -1,14 +1,16 @@
 import asyncio
 import logging
+import os
+from dotenv import load_dotenv
 
 from aiogram import Bot, Dispatcher
-
-from config import TOKEN
 from app.handlers import rt
 
+load_dotenv()
+
+TOKEN = os.getenv("TOKEN")
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
-bot.send_audio
 
 async def main():
     dp.include_router(rt)
