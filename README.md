@@ -1,6 +1,6 @@
 # Telegram Bot for Downloading Tracks from SoundCloud
 
-![SoundCloud Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/SoundCloud_logo.svg/64px-SoundCloud_logo.svg.png)  
+![SoundCloud Logo](https://upload.wikimedia.org/wikipedia/commons/7/78/Soundcloud_logo.svg)  
 *Download music from SoundCloud directly via Telegram!*
 
 This project is a Telegram bot that allows users to download tracks from SoundCloud by simply sending a link to the track. The bot processes the request, downloads the audio file, and sends it back to the user in the chat.
@@ -33,11 +33,9 @@ Configure environment variables: Create a .env file in the root directory and ad
 
 TOKEN=your_token_from_BotFather
 
-Run the bot:
 
-python bot.py
-Usage
-Find the bot in Telegram by its name (e.g., @SoundCloudDownloaderBot).
+### Usage
+
 Send the bot a SoundCloud track link, for example:
 
 
@@ -55,8 +53,7 @@ Downloading...
 (After a few seconds, sends the file a-moment-apart.mp3).
 
 Dependencies
-python-telegram-bot — for interacting with the Telegram API.
-soundcloud-lib or requests — for SoundCloud integration.
+AIOGRAM 3 — for interacting with the Telegram API.
 python-dotenv — for managing environment variables.
 Full list of dependencies is available in requirements.txt.
 
