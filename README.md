@@ -1,5 +1,5 @@
 # SoundCloud Download Bot
-
+![SoundCloud Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Soundcloud_logo.svg/2880px-Soundcloud_logo.svg.png)
 A Telegram bot for downloading tracks from SoundCloud, developed in Python using aiogram 3 and SQLite3.
 
 ## Description
