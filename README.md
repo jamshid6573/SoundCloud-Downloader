@@ -22,23 +22,17 @@ To deploy the bot on your server or locally, follow these steps:
 
 ### Setup Steps
 1. **Clone the repository:**
-   git clone https://github.com/your-username/your-repository.git
-   cd your-repository
-Install dependencies:
+   git clone https://github.com/jamshid6573/SoundCloud-Downloader.git
+   cd SoundCloudDownloader
 
-
-
+### Install dependencies:
 pip install -r requirements.txt
 Configure environment variables: Create a .env file in the root directory and add the following lines:
-
 TOKEN=your_token_from_BotFather
 
 
 ### Usage
-
 Send the bot a SoundCloud track link, for example:
-
-
 https://soundcloud.com/artist/track-name
 Wait for processing — the bot will send you the audio file or an error message if the track is unavailable.
 Example
@@ -72,8 +66,7 @@ Create a Pull Request.
 License
 This project is licensed under the MIT License. Feel free to use, modify, and distribute the code, provided authorship is credited.
 
-Contact
+### Contact
 For questions or suggestions, reach out:
-
 Email: jamshid125200@gmail.com
 Telegram: @jama_omonov
